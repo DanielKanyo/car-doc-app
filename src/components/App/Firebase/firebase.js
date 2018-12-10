@@ -4,12 +4,12 @@ import 'firebase/database';
 import 'firebase/storage';
 
 const config = {
-  apiKey: "AIzaSyD3a5nGPmrl1S6kdVIH04JpiP4q_W8pLqE",
-  authDomain: "car-doc-app-bd321.firebaseapp.com",
-  databaseURL: "https://car-doc-app-bd321.firebaseio.com",
-  projectId: "car-doc-app-bd321",
-  storageBucket: "",
-  messagingSenderId: "521507691602"
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
 };
 
 firebase.initializeApp(config);
