@@ -5,7 +5,6 @@ import './App.css';
 import withAuthentication from '../Session/withAuthentication';
 
 import Header from '../Header/Header';
-import Home from '../Home/Home';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 import CarDoc from '../CarDoc/CarDoc';
@@ -17,7 +16,7 @@ class App extends Component {
         <div>
           <Header />
 
-          <Route path="/" exact component={Home} />
+          <Route path="/" exact component={SignIn} />
           <Route path="/signIn/" component={SignIn} />
           <Route path="/signUp/" component={SignUp} />
           <Route path="/carDoc/" component={CarDoc} />

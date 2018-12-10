@@ -1,0 +1,12 @@
+html, body {
+  background: #292929;
+  color: white;
+}
+
+header a {
+  text-decoration: none;
+}
+
+.component-content {
+  padding: 16px;
+}

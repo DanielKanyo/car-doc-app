@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { auth } from '../Firebase';
+import { Link } from "react-router-dom";
 
 class SignIn extends Component {
 
@@ -31,7 +32,7 @@ class SignIn extends Component {
 
   render() {
     return (
-      <div>
+      <div className="component-content">
         <form onSubmit={this.handleSubmit}>
           <label>
             E-mail:
@@ -44,6 +45,9 @@ class SignIn extends Component {
           </label>
           <br />
           <input type="submit" value="Sign In" />
+          <div>
+            <Link to="/signUp/">SignUp</Link>
+          </div>
         </form>
       </div>
     );

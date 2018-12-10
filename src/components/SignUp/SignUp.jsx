@@ -39,7 +39,7 @@ class SignUp extends Component {
 
   render() {
     return (
-      <div>
+      <div className="component-content">
         <form onSubmit={this.handleSubmit}>
           <label>
             Name:

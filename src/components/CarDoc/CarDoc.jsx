@@ -4,7 +4,7 @@ import withAuthorization from '../Session/withAuthorization';
 class CarDoc extends Component {
   render() {
     return (
-      <div>
+      <div className="component-content">
         CarDoc
       </div>
     );
