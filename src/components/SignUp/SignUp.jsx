@@ -1,6 +1,33 @@
 import React, { Component } from 'react';
 import { auth, db } from '../Firebase';
 
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  paper: {
+    padding: '8px 16px'
+  },
+  textField: {
+    marginTop: 10,
+    width: '100%'
+  },
+  dense: {
+    marginTop: 19,
+  },
+  button: {
+    marginTop: 10,
+    marginBottom: 10,
+    width: '100%'
+  }
+});
 class SignUp extends Component {
 
   constructor(props) {
@@ -38,34 +65,57 @@ class SignUp extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (
       <div className="component-content">
         <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input type="text" value={this.state.name} onChange={(e) => { this.handleChange(e, 'name') }} />
-          </label>
-          <br />
-          <label>
-            E-mail:
-            <input type="text" value={this.state.email} onChange={(e) => { this.handleChange(e, 'email') }} />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input type="password" value={this.state.password} onChange={(e) => { this.handleChange(e, 'password') }} />
-          </label>
-          <br />
-          <label>
-            Password again:
-            <input type="password" value={this.state.passwordAgain} onChange={(e) => { this.handleChange(e, 'passwordAgain') }} />
-          </label>
-          <br />
-          <input type="submit" value="Sign Up" />
+          <Paper className={classes.paper} elevation={1}>
+            <TextField
+              id="name-textfield"
+              label="Name"
+              className={classes.textField}
+              value={this.state.name}
+              onChange={(e) => { this.handleChange(e, 'name') }}
+              margin="normal"
+            />
+            <TextField
+              id="email-textfield"
+              label="E-mail"
+              className={classes.textField}
+              value={this.state.email}
+              onChange={(e) => { this.handleChange(e, 'email') }}
+              margin="normal"
+            />
+            <TextField
+              id="password-textfield"
+              label="Password"
+              className={classes.textField}
+              value={this.state.password}
+              onChange={(e) => { this.handleChange(e, 'password') }}
+              margin="normal"
+              type="password"
+            />
+            <TextField
+              id="password-again-textfield"
+              label="Retype Password"
+              className={classes.textField}
+              value={this.state.passwordAgain}
+              onChange={(e) => { this.handleChange(e, 'passwordAgain') }}
+              margin="normal"
+              type="password"
+            />
+            <Button className={classes.button} variant="contained" color="primary" type="submit">
+              SIGN UP
+            </Button>
+          </Paper>
         </form>
       </div>
     );
   }
 }
+SignUp.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-export default SignUp;
+export default withStyles(styles)(SignUp);
