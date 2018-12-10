@@ -73,7 +73,7 @@ class SignUp extends Component {
           <Paper className={classes.paper} elevation={1}>
             <TextField
               id="name-textfield"
-              label="Name"
+              label="Név"
               className={classes.textField}
               value={this.state.name}
               onChange={(e) => { this.handleChange(e, 'name') }}
@@ -89,7 +89,7 @@ class SignUp extends Component {
             />
             <TextField
               id="password-textfield"
-              label="Password"
+              label="Jelszó"
               className={classes.textField}
               value={this.state.password}
               onChange={(e) => { this.handleChange(e, 'password') }}
@@ -98,7 +98,7 @@ class SignUp extends Component {
             />
             <TextField
               id="password-again-textfield"
-              label="Retype Password"
+              label="Jelszó mégegyszer"
               className={classes.textField}
               value={this.state.passwordAgain}
               onChange={(e) => { this.handleChange(e, 'passwordAgain') }}
@@ -106,7 +106,7 @@ class SignUp extends Component {
               type="password"
             />
             <Button className={classes.button} variant="contained" color="primary" type="submit">
-              SIGN UP
+              Regisztrálok
             </Button>
           </Paper>
         </form>

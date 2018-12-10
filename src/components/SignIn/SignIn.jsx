@@ -14,7 +14,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   paper: {
-    padding: '8px 16px'
+    padding: '8px 16px 16px 16px'
   },
   textField: {
     marginTop: 10,
@@ -24,7 +24,7 @@ const styles = theme => ({
     marginTop: 19,
   },
   button: {
-    marginTop: 10,
+    marginTop: 8,
     width: '100%'
   }
 });
@@ -74,7 +74,7 @@ class SignIn extends Component {
             />
             <TextField
               id="password-textfield"
-              label="Password"
+              label="Jelszó"
               className={classes.textField}
               value={this.state.password}
               onChange={(e) => { this.handleChange(e, 'password') }}
@@ -82,11 +82,11 @@ class SignIn extends Component {
               type="password"
             />
             <Button className={classes.button} variant="contained" color="primary" type="submit">
-              SIGN IN
+              Bejelentkezés
             </Button>
-            <div className="sign-up">
-              <Link to="/signUp/">Sign Up</Link>
-            </div>
+            <Button component={Link} to={"/signUp/"} className={classes.button} variant="contained" color="secondary">
+              Regisztráció
+            </Button>
           </Paper>
         </form>
       </div>
