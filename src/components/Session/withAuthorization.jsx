@@ -11,12 +11,8 @@ const withAuthorization = condition => Component => {
         authUser => {
           if (!condition(authUser)) {
             this.props.history.push('/signIn');
-          } else {
-            let pathname = this.props.history.location.pathname;
-
-            if (condition(authUser) && (pathname === "/signIn" || pathname === "/signUp" || pathname === "/")) {
-              this.props.history.push('/carDoc');
-            }
+          } else if (condition(authUser)) {
+            this.props.history.push('/carDoc');
           }
         },
         () => this.props.history.push('/signIn'),
