@@ -1,6 +1,5 @@
 html, body {
-  background: #292929;
-  color: white;
+  background: #d8d8d8;
 }
 
 header a {
@@ -9,4 +8,16 @@ header a {
 
 .component-content {
   padding: 16px;
+}
+
+.sign-up {
+  display: flex;
+  flex-direction: row;
+  margin: 14px 0px 8px 0px;
+  justify-content: flex-end;
+}
+
+.sign-up a {
+  text-decoration: none;
+  color: #3F51B5
 }
