@@ -198,7 +198,7 @@ class CarDoc extends Component {
             docs: previousDocs,
             file: '',
             uploadReady: false,
-            snackMessage: 'Sikeres mentés',
+            snackMessage: 'Dokumentum elmentve.',
             loading: false,
             plusIcon: true,
           });
@@ -224,7 +224,7 @@ class CarDoc extends Component {
 
     this.setState({
       docs: previousDocs,
-      snackMessage: 'Sikeres törlés',
+      snackMessage: 'Dokumentum törölve.',
     });
 
     this.handleOpenSnack();
