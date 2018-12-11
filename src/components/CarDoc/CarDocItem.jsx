@@ -57,7 +57,7 @@ class CarDocItem extends Component {
 		this.state = {
 			open: false,
 			comment: '',
-			comments: this.props.dataProp.comments
+			comments: this.props.dataProp.comments ? this.props.dataProp.comments : [] 
 		};
 	}
 
