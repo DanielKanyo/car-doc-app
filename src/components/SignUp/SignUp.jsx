@@ -46,7 +46,7 @@ class SignUp extends Component {
   }
 
   handleSubmit = event => {
-    const { name, email, password, errorMsg } = this.state;
+    const { name, email, password } = this.state;
     const { history } = this.props;
 
     auth.createUserWithEmailAndPassword(email, password).then(authenticatedUser => {
@@ -55,9 +55,11 @@ class SignUp extends Component {
         email
       }).then(() => {
         history.push('/carDoc');
-      }).catch(error => {
+      }).catch(errorMsg => {
         this.setState({ errorMsg });
       });
+    }).catch(errorMsg => {
+      this.setState({ errorMsg });
     });
 
     event.preventDefault();
@@ -66,6 +68,13 @@ class SignUp extends Component {
 
   render() {
     const { classes } = this.props;
+    const { name, email, password, passwordAgain, errorMsg } = this.state;
+
+    const disable =
+      password !== passwordAgain ||
+      password === '' ||
+      name === '' ||
+      email === '';
 
     return (
       <div className="component-content">
@@ -105,9 +114,10 @@ class SignUp extends Component {
               margin="normal"
               type="password"
             />
-            <Button className={classes.button} variant="contained" color="primary" type="submit">
+            <Button disabled={disable} className={classes.button} variant="contained" color="primary" type="submit">
               Regisztrálok
             </Button>
+            {errorMsg && <p>{errorMsg.message}</p>}
           </Paper>
         </form>
       </div>

@@ -45,12 +45,14 @@ class SignIn extends Component {
   }
 
   handleSubmit = event => {
-    const { email, password, errorMsg } = this.state;
+    const { email, password } = this.state;
     const { history } = this.props;
 
     auth.signInWithEmailAndPassword(email, password).then(() => {
       history.push('/carDoc');
-    }).catch(error => {
+    }).catch(errorMsg => {
+      this.setState({ errorMsg });
+    }).catch(errorMsg => {
       this.setState({ errorMsg });
     });
 
@@ -87,6 +89,7 @@ class SignIn extends Component {
             <Button component={Link} to={"/signUp/"} className={classes.button} variant="contained" color="secondary">
               Regisztráció
             </Button>
+            {this.state.errorMsg && <p>{this.state.errorMsg.message}</p>}
           </Paper>
         </form>
       </div>
