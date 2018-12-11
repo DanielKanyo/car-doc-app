@@ -10,9 +10,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
 	root: {
@@ -55,27 +58,28 @@ class CarDocItem extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			open: false,
+			openDetailsDialog: false,
+			openDeleteDialog: false,
 			comment: '',
-			comments: this.props.dataProp.comments ? this.props.dataProp.comments : [] 
+			comments: this.props.dataProp.comments ? this.props.dataProp.comments : []
 		};
 	}
 
 	componentDidMount = () => {
 		let authObject = JSON.parse(localStorage.getItem('authUser'));
-    let loggedInUserId = authObject.id;
+		let loggedInUserId = authObject.id;
 
-    this.setState({
-      loggedInUserId
-    });
+		this.setState({
+			loggedInUserId
+		});
 	}
 
-	handleClickOpenDialog = () => {
-		this.setState({ open: true });
+	handleClickOpenDetailsDialog = () => {
+		this.setState({ openDetailsDialog: true });
 	};
 
-	handleCloseDialog = () => {
-		this.setState({ open: false });
+	handleCloseDetailsDialog = () => {
+		this.setState({ openDetailsDialog: false });
 	};
 
 	handleChangeInput = name => event => {
@@ -109,18 +113,30 @@ class CarDocItem extends Component {
 		}
 	}
 
+	handleClickOpenDeleteDialog = () => {
+		this.setState({ openDeleteDialog: true });
+	};
+
+	handleCloseDeleteDialog = () => {
+		this.setState({ openDeleteDialog: false });
+	};
+
+	handleDeleteDoc = (e, carDocId) => {
+		this.props.deleteItemProp(carDocId);
+	}
+
 	render() {
 		let { dataProp, classes } = this.props;
 
 		return (
 			<Grid item xs={6} className="item-grid">
-				<div className="doc-item" style={{ backgroundImage: `url(${dataProp.imageUrl})` }} onClick={this.handleClickOpenDialog}>
+				<div className="doc-item" style={{ backgroundImage: `url(${dataProp.imageUrl})` }} onClick={this.handleClickOpenDetailsDialog}>
 					<div>{this.formatTime(dataProp.uploadTime)}</div>
 				</div>
 
 				<Dialog
 					fullScreen
-					open={this.state.open}
+					open={this.state.openDetailsDialog}
 					onClose={this.handleCloseDialog}
 					TransitionComponent={Transition}
 				>
@@ -129,7 +145,10 @@ class CarDocItem extends Component {
 							<Typography variant="h6" color="inherit" className={classes.flex}>
 								Részletek
               </Typography>
-							<IconButton color="inherit" onClick={this.handleCloseDialog} aria-label="Close">
+							<IconButton color="inherit" onClick={() => { this.handleClickOpenDeleteDialog(); this.handleCloseDetailsDialog() }} aria-label="Delete">
+								<DeleteIcon />
+							</IconButton>
+							<IconButton color="inherit" onClick={this.handleCloseDetailsDialog} aria-label="Close">
 								<CloseIcon />
 							</IconButton>
 						</Toolbar>
@@ -147,7 +166,13 @@ class CarDocItem extends Component {
 							margin="normal"
 						/>
 						<div className="comment-save-btn-container">
-							<Button variant="contained" size="small" className={classes.button} color="primary" onClick={(e) => { this.handleSaveComment(e, dataProp.id) }}>
+							<Button
+								variant="contained"
+								size="small"
+								className={classes.button}
+								color="primary"
+								onClick={(e) => { this.handleSaveComment(e, dataProp.id) }}
+							>
 								Mentés
 							</Button>
 						</div>
@@ -159,6 +184,23 @@ class CarDocItem extends Component {
 							</ul>
 						</div>
 					</div>
+				</Dialog>
+
+				<Dialog
+					open={this.state.openDeleteDialog}
+					onClose={this.handleCloseDeleteDialog}
+					aria-labelledby="delete-diaog"
+					className="delete-dialog-content"
+				>
+					<DialogTitle id="alert-dialog-title">{"Biztosan törlöd a dokumentumot?"}</DialogTitle>
+					<DialogActions>
+						<Button onClick={() => { this.handleCloseDeleteDialog(); this.handleClickOpenDetailsDialog() }} color="primary">
+							Mégse
+            </Button>
+						<Button onClick={(e) => { this.handleDeleteDoc(e, dataProp.id); this.handleCloseDeleteDialog() }} color="primary" autoFocus>
+							Törlés
+            </Button>
+					</DialogActions>
 				</Dialog>
 			</Grid>
 		)

@@ -88,6 +88,7 @@ class CarDoc extends Component {
             <CarDocItem
               key={key}
               dataProp={data}
+              deleteItemProp={this.deleteItem}
             />
           )
         }
@@ -186,6 +187,7 @@ class CarDoc extends Component {
             <CarDocItem
               key={carDocRef.key}
               dataProp={data}
+              deleteItemProp={this.deleteItem}
             />
           )
 
@@ -202,6 +204,26 @@ class CarDoc extends Component {
         });
       });
     });
+  }
+
+  deleteItem = (carDocId) => {
+    let { loggedInUserId } = this.state;
+    let previousDocs = this.state.docs;
+
+    db.deleteCarDocument(loggedInUserId, carDocId);
+
+    for (let i = 0; i < previousDocs.length; i++) {
+      if (previousDocs[i].key === carDocId) {
+        previousDocs.splice(i, 1);
+      }
+    }
+
+    this.setState({
+      docs: previousDocs,
+      snackMessage: 'Sikeres törlés',
+    });
+
+    this.handleOpenSnack();
   }
 
   render() {

@@ -32,3 +32,8 @@ export const getCarDocument = (id) => {
     return snap.val();
   });
 }
+
+export const deleteCarDocument = (userId, carDocId) => {
+  let carDocRef = db.ref(`users/${userId}/carDocs/${carDocId}`);
+  carDocRef.remove();
+}
