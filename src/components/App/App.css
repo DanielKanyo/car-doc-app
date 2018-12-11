@@ -45,6 +45,17 @@ header a {
   border-bottom-right-radius: 4px;
 }
 
+.dialog-img-container>div {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.5);
+  width: calc(100% - 16px);
+  padding: 6px 8px;
+  color: white;
+  font-size: 16px;
+}
+
 .new-item {
   padding-top: 56.25%;
   position: relative;
@@ -61,6 +72,7 @@ header a {
   justify-content: center;
   align-items: center;
   color: #e9e9e9;
+  text-align: center;
 }
 
 .new-item .add-icon svg {
@@ -100,6 +112,24 @@ header a {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.dialog-img-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background-size: cover;
+  background-position: center;
+}
+
+.dialog-description-content {
+  padding: 0px 12px 20px 12px;
+}
+
+.comment-save-btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 @media only screen and (max-width: 340px) {

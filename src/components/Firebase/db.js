@@ -12,8 +12,19 @@ export const addCarDocument = (id, url) => {
     imageUrl: url,
     uploadTime: new Date().getTime()
   });
-  
+
   return carDocRef;
+}
+
+export const saveCarDocumentComment = (userId, carDocId, comment) => {
+  let carDocsCommentsRef = db.ref(`users/${userId}/carDocs/${carDocId}/comments`);
+  let carDocsCommentRef = carDocsCommentsRef.push();
+
+  carDocsCommentRef.set({
+    comment
+  });
+
+  return carDocsCommentRef;
 }
 
 export const getCarDocument = (id) => {

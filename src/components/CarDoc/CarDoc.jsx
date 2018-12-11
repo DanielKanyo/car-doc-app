@@ -68,7 +68,21 @@ class CarDoc extends Component {
         if (carDocResponse.hasOwnProperty(key)) {
           let carDoc = carDocResponse[key];
 
-          let data = { ...carDoc };
+          let commentsArray = [];
+
+          if (carDoc.comments) {
+
+            for (let k in carDoc.comments) {
+              commentsArray.push(carDoc.comments[k].comment);
+            }
+          }
+
+          let data = {
+            imageUrl: carDoc.imageUrl,
+            uploadTime: carDoc.uploadTime,
+            id: key,
+            comments: commentsArray
+          }
 
           previousDocs.unshift(
             <CarDocItem
@@ -76,7 +90,6 @@ class CarDoc extends Component {
               dataProp={data}
             />
           )
-
         }
       }
 
@@ -165,7 +178,8 @@ class CarDoc extends Component {
           let data = {
             userId: loggedInUserId,
             imageUrl,
-            uploadTime
+            uploadTime,
+            id: carDocRef.key
           }
 
           previousDocs.unshift(
@@ -200,7 +214,7 @@ class CarDoc extends Component {
           <Grid item xs={6} className="item-grid">
             <div className="new-item">
               <div className="add-icon">
-                {this.state.plusIcon ? <AddIcon /> : ''}
+                {this.state.plusIcon ? <div><AddIcon /><div>Feltöltés</div></div> : ''}
               </div>
               <div className="file-upload-container">
                 <input type="file" onChange={(e) => this.handleFileChange(e)} />
