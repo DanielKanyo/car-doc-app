@@ -50,9 +50,34 @@ class CarDoc extends Component {
   componentDidMount = () => {
     let authObject = JSON.parse(localStorage.getItem('authUser'));
     let loggedInUserId = authObject.id;
+    let previousDocs = this.state.docs;
 
     this.setState({
       loggedInUserId
+    });
+
+    db.getCarDocument(loggedInUserId).then(carDocResponse => {
+
+      for (let key in carDocResponse) {
+        if (carDocResponse.hasOwnProperty(key)) {
+          let carDoc = carDocResponse[key];
+
+          let data = { ...carDoc };
+
+          previousDocs.unshift(
+            <CarDocItem
+              key={key}
+              dataProp={data}
+            />
+          )
+
+        }
+      }
+
+      this.setState({
+        docs: previousDocs,
+      });
+
     });
   }
 
@@ -115,14 +140,18 @@ class CarDoc extends Component {
   saveItem = () => {
     let file = this.state.file;
     let previousDocs = this.state.docs;
+    let uploadTime = new Date().getTime();
+    let { loggedInUserId } = this.state;
 
     storage.uploadDocImage(file).then(fileObject => {
       let fullPath = fileObject.metadata.fullPath;
-      storage.getImageDownloadUrl(fullPath).then(url => {
-        db.addCarDocument(this.state.loggedInUserId, url).then(carDocRef => {
+
+      storage.getImageDownloadUrl(fullPath).then(imageUrl => {
+        db.addCarDocument(loggedInUserId, imageUrl, uploadTime).then(carDocRef => {
           let data = {
-            userId: this.state.loggedInUserId,
-            url
+            userId: loggedInUserId,
+            imageUrl,
+            uploadTime
           }
 
           previousDocs.unshift(
@@ -140,7 +169,6 @@ class CarDoc extends Component {
           });
 
           this.handleOpenSnack();
-
         });
       });
     });
@@ -153,13 +181,7 @@ class CarDoc extends Component {
     return (
       <div className="component-content">
         <Grid container className={classes.root} spacing={8}>
-          {
-            docs.map((doc) => {
-              return doc;
-            })
-          }
-
-          <Grid item xs={6}>
+          <Grid item xs={6} className="item-grid">
             <div className="new-item">
               <div className="add-icon">
                 {!this.state.uploadReady ? <AddIcon /> : ''}
@@ -178,6 +200,12 @@ class CarDoc extends Component {
                 </div> : ''}
             </div>
           </Grid>
+          
+          {
+            docs.map((doc) => {
+              return doc;
+            })
+          }
         </Grid>
 
         <Snackbar

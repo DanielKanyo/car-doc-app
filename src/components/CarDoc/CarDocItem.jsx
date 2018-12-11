@@ -18,12 +18,25 @@ const styles = theme => ({
 });
 
 class CarDocItem extends Component {
+
+	formatTime = (timestamp) => {
+		const months = ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"];
+		
+		let year = new Date(timestamp).getFullYear();
+		let month = months[new Date(timestamp).getMonth()];
+		let day = new Date(timestamp).getDate();
+		
+		return `${month} ${day}, ${year}`;
+	}
+
 	render() {
 		let { dataProp } = this.props;
 
 		return (
-			<Grid item xs={6}>
-				<div className="doc-item" style={{ backgroundImage: `url(${dataProp.url})` }}></div>
+			<Grid item xs={6} className="item-grid">
+				<div className="doc-item" style={{ backgroundImage: `url(${dataProp.imageUrl})` }}>
+					<div>{this.formatTime(dataProp.uploadTime)}</div>
+				</div>
 			</Grid>
 		)
 	}
