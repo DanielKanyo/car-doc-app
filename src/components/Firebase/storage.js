@@ -14,3 +14,8 @@ export const getImageDownloadUrl = (fullPath) => {
     return url;
   });
 }
+
+export const deleteImage = (imageName) => {
+  let imgRef = storage.ref(`images/${imageName}`);
+  imgRef.delete();
+}

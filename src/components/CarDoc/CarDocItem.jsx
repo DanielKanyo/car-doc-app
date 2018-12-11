@@ -121,8 +121,8 @@ class CarDocItem extends Component {
 		this.setState({ openDeleteDialog: false });
 	};
 
-	handleDeleteDoc = (e, carDocId) => {
-		this.props.deleteItemProp(carDocId);
+	handleDeleteDoc = (e, carDocId, imageName) => {
+		this.props.deleteItemProp(carDocId, imageName);
 	}
 
 	render() {
@@ -130,8 +130,9 @@ class CarDocItem extends Component {
 
 		return (
 			<Grid item xs={6} className="item-grid">
-				<div className="doc-item" style={{ backgroundImage: `url(${dataProp.imageUrl})` }} onClick={this.handleClickOpenDetailsDialog}>
+				<div className="doc-item" onClick={this.handleClickOpenDetailsDialog}>
 					<div>{this.formatTime(dataProp.uploadTime)}</div>
+					<img src={dataProp.imageUrl} alt=""></img>
 				</div>
 
 				<Dialog
@@ -197,11 +198,16 @@ class CarDocItem extends Component {
 						<Button onClick={() => { this.handleCloseDeleteDialog(); this.handleClickOpenDetailsDialog() }} color="primary">
 							Mégse
             </Button>
-						<Button onClick={(e) => { this.handleDeleteDoc(e, dataProp.id); this.handleCloseDeleteDialog() }} color="primary" autoFocus>
+						<Button 
+							onClick={(e) => { this.handleDeleteDoc(e, dataProp.id, dataProp.imageName); this.handleCloseDeleteDialog() }} 
+							color="primary" 
+							autoFocus
+						>
 							Törlés
             </Button>
 					</DialogActions>
 				</Dialog>
+
 			</Grid>
 		)
 	}

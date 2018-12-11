@@ -28,8 +28,15 @@ header a {
   background: white;
   padding-top: 56.3%;
   border-radius: 4px;
-  background-position: center;
-  background-size: 100% auto;
+  overflow-y: hidden;
+  cursor: pointer;
+}
+
+.doc-item>img {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: auto;
 }
 
 .doc-item>div {
@@ -43,6 +50,7 @@ header a {
   font-size: 13px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
+  z-index: 10;
 }
 
 .dialog-img-container>div {

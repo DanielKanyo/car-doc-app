@@ -4,12 +4,13 @@ import {
 
 export const user = id => db.ref(`users/${id}`);
 
-export const addCarDocument = (id, url) => {
+export const addCarDocument = (id, url, imageName) => {
   let carDocsRef = db.ref(`users/${id}/carDocs`);
   let carDocRef = carDocsRef.push();
 
   carDocRef.set({
     imageUrl: url,
+    imageName,
     uploadTime: new Date().getTime()
   });
 

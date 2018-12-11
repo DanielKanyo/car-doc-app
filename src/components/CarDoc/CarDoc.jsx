@@ -80,6 +80,7 @@ class CarDoc extends Component {
           let data = {
             imageUrl: carDoc.imageUrl,
             uploadTime: carDoc.uploadTime,
+            imageName: carDoc.imageName,
             id: key,
             comments: commentsArray
           }
@@ -167,6 +168,7 @@ class CarDoc extends Component {
     });
 
     let file = this.state.file;
+    let imageName = file.name;
     let previousDocs = this.state.docs;
     let uploadTime = new Date().getTime();
     let { loggedInUserId } = this.state;
@@ -175,11 +177,12 @@ class CarDoc extends Component {
       let fullPath = fileObject.metadata.fullPath;
 
       storage.getImageDownloadUrl(fullPath).then(imageUrl => {
-        db.addCarDocument(loggedInUserId, imageUrl, uploadTime).then(carDocRef => {
+        db.addCarDocument(loggedInUserId, imageUrl, uploadTime, imageName).then(carDocRef => {
           let data = {
             userId: loggedInUserId,
             imageUrl,
             uploadTime,
+            imageName,
             id: carDocRef.key
           }
 
@@ -206,11 +209,12 @@ class CarDoc extends Component {
     });
   }
 
-  deleteItem = (carDocId) => {
+  deleteItem = (carDocId, imageName) => {
     let { loggedInUserId } = this.state;
     let previousDocs = this.state.docs;
 
     db.deleteCarDocument(loggedInUserId, carDocId);
+    storage.deleteImage(imageName);
 
     for (let i = 0; i < previousDocs.length; i++) {
       if (previousDocs[i].key === carDocId) {
@@ -274,7 +278,7 @@ class CarDoc extends Component {
             horizontal: 'left',
           }}
           open={this.state.openSnack}
-          autoHideDuration={6000}
+          autoHideDuration={5000}
           onClose={this.handleCloseSnack}
           ContentProps={{
             'aria-describedby': 'message-id',
