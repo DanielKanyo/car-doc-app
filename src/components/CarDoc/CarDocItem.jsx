@@ -145,14 +145,13 @@ class CarDocItem extends Component {
 							value={this.state.comment}
 							onChange={this.handleChangeInput('comment')}
 							margin="normal"
-							autoFocus
 						/>
 						<div className="comment-save-btn-container">
 							<Button variant="contained" size="small" className={classes.button} color="primary" onClick={(e) => { this.handleSaveComment(e, dataProp.id) }}>
 								Mentés
 							</Button>
 						</div>
-						<div>
+						<div className="car-doc-comments-container">
 							<ul>
 								{this.state.comments.map((comment, i) => {
 									return <li key={i}>{comment}</li>
