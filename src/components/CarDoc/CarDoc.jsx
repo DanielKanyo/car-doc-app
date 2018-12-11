@@ -15,6 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Fab from '@material-ui/core/Fab';
 import ClearIcon from '@material-ui/icons/Clear';
 import SaveIcon from '@material-ui/icons/Save';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
@@ -30,7 +31,10 @@ const styles = theme => ({
   fab: {
     margin: 4,
     color: 'white'
-  }
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
 });
 
 class CarDoc extends Component {
@@ -43,7 +47,9 @@ class CarDoc extends Component {
       openSnack: false,
       file: '',
       uploadReady: false,
-      snackMessage: ''
+      snackMessage: '',
+      loading: false,
+      plusIcon: true,
     };
   }
 
@@ -104,7 +110,8 @@ class CarDoc extends Component {
       if (fileType.includes("image") && file.size < maxFileSize) {
         this.setState({
           file,
-          uploadReady: true
+          uploadReady: true,
+          plusIcon: false
         });
       } else {
         if (file.size > maxFileSize) {
@@ -138,6 +145,13 @@ class CarDoc extends Component {
   }
 
   saveItem = () => {
+
+    this.setState({
+      loading: true,
+      uploadReady: false,
+      plusIcon: false,
+    });
+
     let file = this.state.file;
     let previousDocs = this.state.docs;
     let uploadTime = new Date().getTime();
@@ -165,7 +179,9 @@ class CarDoc extends Component {
             docs: previousDocs,
             file: '',
             uploadReady: false,
-            snackMessage: 'Sikeres mentés'
+            snackMessage: 'Sikeres mentés',
+            loading: false,
+            plusIcon: true,
           });
 
           this.handleOpenSnack();
@@ -184,23 +200,31 @@ class CarDoc extends Component {
           <Grid item xs={6} className="item-grid">
             <div className="new-item">
               <div className="add-icon">
-                {!this.state.uploadReady ? <AddIcon /> : ''}
+                {this.state.plusIcon ? <AddIcon /> : ''}
               </div>
               <div className="file-upload-container">
                 <input type="file" onChange={(e) => this.handleFileChange(e)} />
               </div>
-              {this.state.uploadReady ?
-                <div className="save-or-clear-container">
-                  <Fab aria-label="Delete" className={classes.fab} size="small" color="secondary" onClick={this.handleClearFileUpload}>
-                    <ClearIcon />
-                  </Fab>
-                  <Fab aria-label="Delete" className={classes.fab} size="small" color="primary" onClick={this.saveItem}>
-                    <SaveIcon />
-                  </Fab>
-                </div> : ''}
+              {
+                this.state.uploadReady ?
+                  <div className="save-or-clear-container">
+                    <Fab aria-label="Delete" className={classes.fab} size="small" color="secondary" onClick={this.handleClearFileUpload}>
+                      <ClearIcon />
+                    </Fab>
+                    <Fab aria-label="Delete" className={classes.fab} size="small" color="primary" onClick={this.saveItem}>
+                      <SaveIcon />
+                    </Fab>
+                  </div> : ''
+              }
+              {
+                this.state.loading ?
+                  <div className="loading-container">
+                    <CircularProgress className={classes.progress} />
+                  </div> : ''
+              }
             </div>
           </Grid>
-          
+
           {
             docs.map((doc) => {
               return doc;
