@@ -38,3 +38,8 @@ export const deleteCarDocument = (userId, carDocId) => {
   let carDocRef = db.ref(`users/${userId}/carDocs/${carDocId}`);
   carDocRef.remove();
 }
+
+export const deleteCarDocumentComment = (userId, carDocId, commentId) => {
+  let commentRef = db.ref(`users/${userId}/carDocs/${carDocId}/comments/${commentId}`);
+  commentRef.remove();
+}

@@ -107,7 +107,13 @@ class CarDocItem extends Component {
 
 		if (this.state.comment) {
 			db.saveCarDocumentComment(this.state.loggedInUserId, carDocId, this.state.comment).then(res => {
-				previousComments.push(this.state.comment);
+
+				let commentObject = {
+					comment: this.state.comment,
+					id: res.key
+				}
+
+				previousComments.push(commentObject);
 
 				this.setState({
 					comments: previousComments,
@@ -139,6 +145,22 @@ class CarDocItem extends Component {
 		this.setState({
 			lightboxShow: false
 		});
+	}
+
+	handleDeleteComment = (commentId, carDocId) => {
+		let previousComments = this.state.comments;
+
+		this.props.deleteCommentProp(commentId, carDocId);
+
+		for (let i = 0; i < previousComments.length; i++) {
+			if (previousComments[i].id === commentId) {
+				previousComments.splice(i, 1);
+			}
+
+			this.setState({
+				docs: previousComments,
+			});
+		}
 	}
 
 	render() {
@@ -197,8 +219,16 @@ class CarDocItem extends Component {
 						</div>
 						<div className="car-doc-comments-container">
 							<ul>
-								{this.state.comments.map((comment, i) => {
-									return <li key={i}>{comment}</li>
+								{this.state.comments.map((commentObject, i) => {
+									return <li key={i} className="comment-container">
+										<div>{commentObject.comment}</div>
+										<div
+											className="delete-comment-btn-container"
+											onClick={() => { this.handleDeleteComment(commentObject.id, dataProp.id) }}
+										>
+											<CloseIcon className="comment-delete-icon" />
+										</div>
+									</li>
 								})}
 							</ul>
 						</div>

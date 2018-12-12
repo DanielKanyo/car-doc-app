@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Fab from '@material-ui/core/Fab';
 import ClearIcon from '@material-ui/icons/Clear';
-import SaveIcon from '@material-ui/icons/Save';
+import DoneIcon from '@material-ui/icons/Done';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
@@ -73,7 +73,12 @@ class CarDoc extends Component {
           if (carDoc.comments) {
 
             for (let k in carDoc.comments) {
-              commentsArray.push(carDoc.comments[k].comment);
+              let commentObj = {
+                comment: carDoc.comments[k].comment,
+                id: k
+              }
+              
+              commentsArray.push(commentObj);
             }
           }
 
@@ -90,6 +95,7 @@ class CarDoc extends Component {
               key={key}
               dataProp={data}
               deleteItemProp={this.deleteItem}
+              deleteCommentProp={this.deleteComment}
             />
           )
         }
@@ -160,7 +166,6 @@ class CarDoc extends Component {
   }
 
   saveItem = () => {
-
     this.setState({
       loading: true,
       uploadReady: false,
@@ -191,6 +196,7 @@ class CarDoc extends Component {
               key={carDocRef.key}
               dataProp={data}
               deleteItemProp={this.deleteItem}
+              deleteCommentProp={this.deleteComment}
             />
           )
 
@@ -230,6 +236,16 @@ class CarDoc extends Component {
     this.handleOpenSnack();
   }
 
+  deleteComment = (commentId, carDocId) => {
+    db.deleteCarDocumentComment(this.state.loggedInUserId, carDocId, commentId);
+
+    this.setState({
+      snackMessage: 'Komment törölve.',
+    });
+
+    this.handleOpenSnack();
+  }
+
   render() {
     const { classes } = this.props;
     let { docs } = this.state;
@@ -252,7 +268,7 @@ class CarDoc extends Component {
                       <ClearIcon />
                     </Fab>
                     <Fab aria-label="Delete" className={classes.fab} size="small" color="primary" onClick={this.saveItem}>
-                      <SaveIcon />
+                      <DoneIcon />
                     </Fab>
                   </div> : ''
               }
