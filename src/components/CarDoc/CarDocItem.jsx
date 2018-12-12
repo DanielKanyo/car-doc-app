@@ -47,6 +47,9 @@ const styles = theme => ({
 		margin: '4px 0px',
 		width: '100%'
 	},
+	lightboxCloseBtn: {
+		color: 'white',
+	}
 });
 
 function Transition(props) {
@@ -61,7 +64,8 @@ class CarDocItem extends Component {
 			openDetailsDialog: false,
 			openDeleteDialog: false,
 			comment: '',
-			comments: this.props.dataProp.comments ? this.props.dataProp.comments : []
+			comments: this.props.dataProp.comments ? this.props.dataProp.comments : [],
+			lightboxShow: false,
 		};
 	}
 
@@ -125,9 +129,21 @@ class CarDocItem extends Component {
 		this.props.deleteItemProp(carDocId, imageName);
 	}
 
+	openLightbox = () => {
+		this.setState({
+			lightboxShow: true
+		});
+	}
+
+	closeLightbox = () => {
+		this.setState({
+			lightboxShow: false
+		});
+	}
+
 	render() {
 		let { dataProp, classes } = this.props;
-    let disabled = this.state.comment === '' ? true : false;
+		let disabled = this.state.comment === '' ? true : false;
 
 		return (
 			<Grid item xs={6} className="item-grid">
@@ -155,7 +171,7 @@ class CarDocItem extends Component {
 							</IconButton>
 						</Toolbar>
 					</AppBar>
-					<div className="dialog-img-container" style={{ backgroundImage: `url(${dataProp.imageUrl})` }}>
+					<div onClick={this.openLightbox} className="dialog-img-container" style={{ backgroundImage: `url(${dataProp.imageUrl})` }}>
 						<div>{this.formatTime(dataProp.uploadTime)}</div>
 					</div>
 					<div className="dialog-description-content">
@@ -200,15 +216,27 @@ class CarDocItem extends Component {
 						<Button onClick={() => { this.handleCloseDeleteDialog(); this.handleClickOpenDetailsDialog() }} color="primary">
 							Mégse
             </Button>
-						<Button 
-							onClick={(e) => { this.handleDeleteDoc(e, dataProp.id, dataProp.imageName); this.handleCloseDeleteDialog() }} 
-							color="primary" 
+						<Button
+							onClick={(e) => { this.handleDeleteDoc(e, dataProp.id, dataProp.imageName); this.handleCloseDeleteDialog() }}
+							color="primary"
 							autoFocus
 						>
 							Törlés
             </Button>
 					</DialogActions>
 				</Dialog>
+
+				{
+					this.state.lightboxShow ?
+						<div className="light-box" onClick={this.closeLightbox}>
+							<div className="close-lightbox-container">
+								<IconButton color="inherit" onClick={this.closeLightbox} aria-label="Close" className={classes.lightboxCloseBtn}>
+									<CloseIcon />
+								</IconButton>
+							</div>
+							<img src={dataProp.imageUrl} alt="" height="auto"></img>
+						</div> : ''
+				}
 
 			</Grid>
 		)
