@@ -127,6 +127,7 @@ class CarDocItem extends Component {
 
 	render() {
 		let { dataProp, classes } = this.props;
+    let disabled = this.state.comment === '' ? true : false;
 
 		return (
 			<Grid item xs={6} className="item-grid">
@@ -173,6 +174,7 @@ class CarDocItem extends Component {
 								className={classes.button}
 								color="primary"
 								onClick={(e) => { this.handleSaveComment(e, dataProp.id) }}
+								disabled={disabled}
 							>
 								Mentés
 							</Button>
