@@ -240,7 +240,7 @@ class CarDoc extends Component {
     db.deleteCarDocumentComment(this.state.loggedInUserId, carDocId, commentId);
 
     this.setState({
-      snackMessage: 'Komment törölve.',
+      snackMessage: 'Megjegyzés törölve.',
     });
 
     this.handleOpenSnack();
