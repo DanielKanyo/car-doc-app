@@ -87,7 +87,8 @@ class CarDoc extends Component {
             uploadTime: carDoc.uploadTime,
             imageName: carDoc.imageName,
             id: key,
-            comments: commentsArray
+            comments: commentsArray,
+            docName: carDoc.docName
           }
 
           previousDocs.unshift(
@@ -137,14 +138,14 @@ class CarDoc extends Component {
       } else {
         if (file.size > maxFileSize) {
           this.setState({
-            snackMessage: 'Túl nagy a kép mérete!'
+            snackMessage: 'Túl nagy a kép mérete'
           });
 
           this.handleOpenSnack();
 
         } else {
           this.setState({
-            snackMessage: 'Csak képet tölthetsz fel!'
+            snackMessage: 'Csak képet tölthetsz fel'
           });
 
           this.handleOpenSnack();
@@ -174,6 +175,7 @@ class CarDoc extends Component {
 
     let file = this.state.file;
     let imageName = file.name;
+    let docName = '';
     let previousDocs = this.state.docs;
     let uploadTime = new Date().getTime();
     let { loggedInUserId } = this.state;
@@ -182,13 +184,14 @@ class CarDoc extends Component {
       let fullPath = fileObject.metadata.fullPath;
 
       storage.getImageDownloadUrl(fullPath).then(imageUrl => {
-        db.addCarDocument(loggedInUserId, imageUrl, uploadTime, imageName).then(carDocRef => {
+        db.addCarDocument(loggedInUserId, imageUrl, imageName, docName).then(carDocRef => {
           let data = {
             userId: loggedInUserId,
             imageUrl,
             uploadTime,
             imageName,
-            id: carDocRef.key
+            id: carDocRef.key,
+            docName
           }
 
           previousDocs.unshift(
@@ -204,7 +207,7 @@ class CarDoc extends Component {
             docs: previousDocs,
             file: '',
             uploadReady: false,
-            snackMessage: 'Dokumentum elmentve.',
+            snackMessage: 'Dokumentum elmentve',
             loading: false,
             plusIcon: true,
           });
@@ -230,7 +233,7 @@ class CarDoc extends Component {
 
     this.setState({
       docs: previousDocs,
-      snackMessage: 'Dokumentum törölve.',
+      snackMessage: 'Dokumentum törölve',
     });
 
     this.handleOpenSnack();
@@ -240,7 +243,7 @@ class CarDoc extends Component {
     db.deleteCarDocumentComment(this.state.loggedInUserId, carDocId, commentId);
 
     this.setState({
-      snackMessage: 'Megjegyzés törölve.',
+      snackMessage: 'Megjegyzés törölve',
     });
 
     this.handleOpenSnack();

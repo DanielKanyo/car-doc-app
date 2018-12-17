@@ -10,12 +10,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import DoneIcon from '@material-ui/icons/Done';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = theme => ({
 	root: {
@@ -35,7 +37,9 @@ const styles = theme => ({
 		flex: 1,
 	},
 	textField: {
-		width: '100%'
+		width: '100%',
+		marginTop: '8px',
+		marginBottom: '2px'
 	},
 	iconSmall: {
 		fontSize: 20,
@@ -44,8 +48,10 @@ const styles = theme => ({
 		marginRight: theme.spacing.unit,
 	},
 	button: {
-		margin: '4px 0px',
-		width: '100%'
+		margin: '0',
+		width: '100%',
+		padding: '4px 4px',
+		minWidth: '36px'
 	},
 	lightboxCloseBtn: {
 		color: 'white',
@@ -63,9 +69,12 @@ class CarDocItem extends Component {
 		this.state = {
 			openDetailsDialog: false,
 			openDeleteDialog: false,
+			docName: this.props.dataProp.docName ? this.props.dataProp.docName : '',
+			savedDocName: this.props.dataProp.docName ? this.props.dataProp.docName : '',
 			comment: '',
 			comments: this.props.dataProp.comments ? this.props.dataProp.comments : [],
 			lightboxShow: false,
+			snackMessage: ''
 		};
 	}
 
@@ -83,7 +92,10 @@ class CarDocItem extends Component {
 	};
 
 	handleCloseDetailsDialog = () => {
-		this.setState({ openDetailsDialog: false });
+		this.setState({
+			openDetailsDialog: false,
+			docName: this.state.savedDocName
+		});
 	};
 
 	handleChangeInput = name => event => {
@@ -120,6 +132,19 @@ class CarDocItem extends Component {
 					comment: ''
 				})
 			});
+		}
+	}
+
+	handleSaveTitle = (e, carDocId) => {
+		if (this.state.docName) {
+			db.saveCarDocumentTitle(this.state.loggedInUserId, carDocId, this.state.docName);
+
+			this.setState({
+				savedDocName: this.state.docName,
+				snackMessage: 'Sikeres mentés'
+			});
+
+			this.handleOpenSnack();
 		}
 	}
 
@@ -163,14 +188,27 @@ class CarDocItem extends Component {
 		}
 	}
 
+	handleOpenSnack = () => {
+		this.setState({ openSnack: true });
+	};
+
+	handleCloseSnack = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		this.setState({ openSnack: false });
+	};
+
 	render() {
 		let { dataProp, classes } = this.props;
-		let disabled = this.state.comment === '' ? true : false;
+		let commentBtnDisabled = this.state.comment === '' ? true : false;
+		let titleBtnDisabled = this.state.docName === this.state.savedDocName ? true : false;
 
 		return (
 			<Grid item xs={6} className="item-grid">
 				<div className="doc-item" onClick={this.handleClickOpenDetailsDialog}>
-					<div>{this.formatTime(dataProp.uploadTime)}</div>
+					{this.state.savedDocName ? <div>{this.state.savedDocName}</div> : ''}
 					<img src={dataProp.imageUrl} alt=""></img>
 				</div>
 
@@ -197,26 +235,51 @@ class CarDocItem extends Component {
 						<div>{this.formatTime(dataProp.uploadTime)}</div>
 					</div>
 					<div className="dialog-description-content">
-						<TextField
-							id="comment-input"
-							label="Megjegyzés"
-							className={classes.textField}
-							value={this.state.comment}
-							onChange={this.handleChangeInput('comment')}
-							margin="normal"
-						/>
-						<div className="comment-save-btn-container">
-							<Button
-								variant="contained"
-								size="small"
-								className={classes.button}
-								color="primary"
-								onClick={(e) => { this.handleSaveComment(e, dataProp.id) }}
-								disabled={disabled}
-							>
-								Mentés
-							</Button>
+
+						<div className="input-and-btn-container">
+							<TextField
+								id="title-input"
+								label="Dokumentum neve"
+								className={classes.textField}
+								value={this.state.docName}
+								onChange={this.handleChangeInput('docName')}
+							/>
+							<div className="comment-save-btn-container">
+								<Button
+									variant="contained"
+									size="small"
+									className={classes.button}
+									color="primary"
+									onClick={(e) => { this.handleSaveTitle(e, dataProp.id) }}
+									disabled={titleBtnDisabled}
+								>
+									<DoneIcon />
+								</Button>
+							</div>
 						</div>
+
+						<div className="input-and-btn-container">
+							<TextField
+								id="comment-input"
+								label="Megjegyzés"
+								className={classes.textField}
+								value={this.state.comment}
+								onChange={this.handleChangeInput('comment')}
+							/>
+							<div className="comment-save-btn-container">
+								<Button
+									variant="contained"
+									size="small"
+									className={classes.button}
+									color="primary"
+									onClick={(e) => { this.handleSaveComment(e, dataProp.id) }}
+									disabled={commentBtnDisabled}
+								>
+									<DoneIcon />
+								</Button>
+							</div>
+						</div>
+
 						<div className="car-doc-comments-container">
 							<ul>
 								{this.state.comments.map((commentObject, i) => {
@@ -268,6 +331,30 @@ class CarDocItem extends Component {
 						</div> : ''
 				}
 
+				<Snackbar
+					anchorOrigin={{
+						vertical: 'bottom',
+						horizontal: 'left',
+					}}
+					open={this.state.openSnack}
+					autoHideDuration={5000}
+					onClose={this.handleCloseSnack}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={<span id="message-id">{this.state.snackMessage}</span>}
+					action={[
+						<IconButton
+							key="close"
+							aria-label="Close"
+							color="inherit"
+							className={classes.close}
+							onClick={this.handleCloseSnack}
+						>
+							<CloseIcon />
+						</IconButton>,
+					]}
+				/>
 			</Grid>
 		)
 	}

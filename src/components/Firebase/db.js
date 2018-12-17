@@ -4,14 +4,15 @@ import {
 
 export const user = id => db.ref(`users/${id}`);
 
-export const addCarDocument = (id, url, imageName) => {
+export const addCarDocument = (id, url, imageName, docName) => {
   let carDocsRef = db.ref(`users/${id}/carDocs`);
   let carDocRef = carDocsRef.push();
 
   carDocRef.set({
     imageUrl: url,
     imageName,
-    uploadTime: new Date().getTime()
+    uploadTime: new Date().getTime(),
+    docName
   });
 
   return carDocRef;
@@ -26,6 +27,16 @@ export const saveCarDocumentComment = (userId, carDocId, comment) => {
   });
 
   return carDocsCommentRef;
+}
+
+export const saveCarDocumentTitle = (userId, carDocId, docName) => {
+  let carDocsRef = db.ref(`users/${userId}/carDocs/${carDocId}`);
+
+  carDocsRef.update({
+    docName
+  });
+
+  return carDocsRef;
 }
 
 export const getCarDocument = (id) => {
